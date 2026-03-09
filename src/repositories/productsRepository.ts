@@ -1,6 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
-import { NormalisedProduct, StoreProduct, ValidatedQuery } from '../types';
-import QueryBuilder from '../services/QueryBuilder';
+import { NormalisedProduct, StoreProduct, ValidatedQuery } from '../types.js';
+import QueryBuilder from '../services/QueryBuilder.js';
 
 export class ProductsRepository {
   constructor(private db: DatabaseSync) {

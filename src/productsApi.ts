@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { validateQuery } from './validators';
-import ClientError from './errors/ClientError';
-import type { ProductsService } from './services/prodctsService';
+import { validateQuery } from './validators.js';
+import ClientError from './errors/ClientError.js';
+import type { ProductsService } from './services/prodctsService.js';
 
 export const createProductsRouter = (productsService: ProductsService) => {
   const router = Router();

@@ -1,4 +1,4 @@
-import ClientError from './errors/ClientError';
+import ClientError from './errors/ClientError.js';
 
 export type QueryValue = string | string[] | undefined;
 

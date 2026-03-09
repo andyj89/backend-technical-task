@@ -1,4 +1,4 @@
-import { app, productsService } from './server';
+import { app, productsService } from './server.js';
 import { resolve } from 'node:path';
 
 const PORT = process.env.PORT || 3000;

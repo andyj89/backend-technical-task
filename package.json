@@ -8,7 +8,7 @@
     "test": "DB_PATH=:memory: vitest",
     "test:integration": "DB_PATH=:memory: vitest tests/integration --no-file-parallelism",
     "test:load": "./load-tests.sh",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "dev": "rm -f products.db && tsx watch src/index.ts",
     "dev:debug": "rm -f products.db && node --inspect --import tsx src/index.ts",
     "start": "node dist/index.js",
