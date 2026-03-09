@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "DB_PATH=:memory: vitest",
-    "test:integration": "DB_PATH=:memory: vitest tests/ --no-file-parallelism",
+    "test:integration": "DB_PATH=:memory: vitest tests/integration --no-file-parallelism",
+    "test:load": "./load-tests.sh",
     "build": "tsc",
     "dev": "rm -f products.db && tsx watch src/index.ts",
     "dev:debug": "rm -f products.db && node --inspect --import tsx src/index.ts",
@@ -35,6 +36,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.3.5",
     "eslint": "^10.0.3",
+    "k6": "^0.0.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1"
