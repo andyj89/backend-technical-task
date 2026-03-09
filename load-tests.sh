@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Default values if arguments are missing
-TARGET_URL=${1:-"http://host.docker.internal:3000"}
+PORT=${PORT:-3000}
+TARGET_URL=${1:-"http://host.docker.internal:${PORT}"}
 
 echo "-------------------------------------------------------"
 echo "🚀 PRODUCTS API LOAD TEST"

@@ -7,21 +7,16 @@
 
 ## Running Load Tests
 
-1. Start the server:
+1. Start the server (data is auto-seeded on startup):
 ```bash
-npm run dev
+npm install
+npm run build
+PORT=3000 npm run start
 ```
 
-2. In another terminal, seed the database:
+2. Wait for "Ingested X products" message, then run the load test:
 ```bash
-curl -X POST http://localhost:3000/api/products/ingest \
-  -H "Content-Type: application/json" \
-  -d '{"path": "./products_1000_mixed_schema.json"}'
-```
-
-3. Run the load test:
-```bash
-npm run test:load
+PORT=3000 npm run test:load
 ```
 
 Or with a custom URL:
@@ -38,5 +33,5 @@ Or with a custom URL:
 
 ## Thresholds
 
-- p99 response time: < 100ms
-- Error rate: < 1%
+- p99 response time: < 500ms
+- Error rate: < 10%

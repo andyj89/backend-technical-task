@@ -129,7 +129,7 @@ npm start
 ## Architecture
 
 - **Express.js** - Web framework
-- **SQLite** - In-memory database for fast queries
+- **SQLite** - In-memory database for fast queries (recreated on each startup)
 - **TypeScript** - Type safety
 - **Vitest** - Unit and integration testing
 - **k6** - Load testing

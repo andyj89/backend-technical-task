@@ -9,8 +9,7 @@ import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 // Create shared database and service
-const dbPath = process.env.DB_PATH || './products.db';
-const db = new DatabaseSync(dbPath);
+const db = new DatabaseSync(':memory:');
 const repository = new ProductsRepository(db);
 const client = createProductsClient();
 const productsService = createProductsService(repository, client);

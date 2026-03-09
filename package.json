@@ -5,12 +5,12 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "DB_PATH=:memory: vitest src",
-    "test:integration": "DB_PATH=:memory: vitest tests/integration --no-file-parallelism",
+    "test": "vitest src",
+    "test:integration": "vitest tests/integration --no-file-parallelism",
     "test:load": "./load-tests.sh",
     "build": "rm -rf dist && tsc",
-    "dev": "rm -f products.db && tsx watch src/index.ts",
-    "dev:debug": "rm -f products.db && node --inspect --import tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "dev:debug": "node --inspect --import tsx src/index.ts",
     "start": "node dist/index.js",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"
