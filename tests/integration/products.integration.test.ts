@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { DatabaseSync } from 'node:sqlite';
-import { ProductsRepository } from '../src/repositories/productsRepository.js';
-import { createProductsService } from '../src/services/prodctsService.js';
-import { createProductsClient } from '../src/clients/productsClient.js';
+import { ProductsRepository } from '../../src/repositories/productRepository.js';
+import { createProductsService } from '../../src/services/productService.js';
+import { createProductsClient } from '../../src/clients/productsClient.js';
 import { resolve } from 'node:path';
 
 describe('Products Integration', () => {
@@ -12,7 +12,10 @@ describe('Products Integration', () => {
     const client = createProductsClient();
     const service = createProductsService(repository, client);
 
-    const productsPath = resolve(process.cwd(), 'products_1000_mixed_schema.json');
+    const productsPath = resolve(
+      process.cwd(),
+      'products_1000_mixed_schema.json',
+    );
     const result = await service.ingestProducts(productsPath);
 
     expect(result.inserted).toBeGreaterThan(0);
@@ -20,7 +23,7 @@ describe('Products Integration', () => {
 
     const productsForAge8 = await service.findByAge(8);
     expect(productsForAge8.length).toBeGreaterThan(0);
-    
+
     productsForAge8.forEach((product) => {
       expect(product.ageSuitability.minAge).toBeLessThanOrEqual(8);
       expect(product.ageSuitability.maxAge).toBeGreaterThanOrEqual(8);
@@ -33,12 +36,15 @@ describe('Products Integration', () => {
     const client = createProductsClient();
     const service = createProductsService(repository, client);
 
-    const productsPath = resolve(process.cwd(), 'products_1000_mixed_schema.json');
+    const productsPath = resolve(
+      process.cwd(),
+      'products_1000_mixed_schema.json',
+    );
     await service.ingestProducts(productsPath);
 
     const products = await service.findByAge(age);
     expect(products.length).toBeGreaterThan(0);
-    
+
     products.forEach((product) => {
       expect(product.ageSuitability.minAge).toBeLessThanOrEqual(age);
       expect(product.ageSuitability.maxAge).toBeGreaterThanOrEqual(age);
@@ -53,7 +59,10 @@ describe('Products Integration', () => {
     const client = createProductsClient();
     const service = createProductsService(repository, client);
 
-    const productsPath = resolve(process.cwd(), 'products_1000_mixed_schema.json');
+    const productsPath = resolve(
+      process.cwd(),
+      'products_1000_mixed_schema.json',
+    );
     await service.ingestProducts(productsPath);
 
     const products = await service.findByAge(100);
@@ -66,7 +75,10 @@ describe('Products Integration', () => {
     const client = createProductsClient();
     const service = createProductsService(repository, client);
 
-    const productsPath = resolve(process.cwd(), 'products_1000_mixed_schema.json');
+    const productsPath = resolve(
+      process.cwd(),
+      'products_1000_mixed_schema.json',
+    );
     const result = await service.ingestProducts(productsPath);
 
     expect(result.inserted).toBeGreaterThan(0);

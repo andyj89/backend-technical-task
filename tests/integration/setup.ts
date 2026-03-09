@@ -1,4 +1,4 @@
-import { app } from '../src/server.js';
+import { app, productsService } from '../../src/server.js';
 import http from 'node:http';
 import { resolve } from 'node:path';
 
@@ -25,16 +25,7 @@ export class TestServer {
       process.cwd(),
       'products_1000_mixed_schema.json',
     );
-    const response = await fetch(
-      `http://localhost:${this.port}/api/products/ingest`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: productsPath }),
-      },
-    );
-    const data = await response.json();
-    return data;
+    await productsService.ingestProducts(productsPath);
   }
 
   async stop(): Promise<void> {

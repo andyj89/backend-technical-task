@@ -1,5 +1,171 @@
 # backend-technical-task
 
+
+---
+
+## Setup Instructions
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/andyj89/backend-technical-task.git
+cd backend-technical-task
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the server:
+```bash
+npm run build
+npm start
+```
+
+The server will start on `http://localhost:3000`
+
+## API Usage Examples
+
+### Get Products by Age
+
+Find all products suitable for 8-year-olds:
+```bash
+curl "http://localhost:3000/api/products?age=8"
+```
+
+### Filter by Stock Status
+
+Get only in-stock products:
+```bash
+curl "http://localhost:3000/api/products?inStock=true"
+```
+
+### Text Search
+
+Search for products containing "game":
+```bash
+curl "http://localhost:3000/api/products?q=game"
+```
+
+### Combined Filters
+
+Find in-stock products for age 8 containing "puzzle":
+```bash
+curl "http://localhost:3000/api/products?age=8&inStock=true&q=puzzle"
+```
+
+### Response Format
+
+```json
+{
+  "products": [
+    {
+      "uuid": "123e4567-e89b-12d3-a456-426614174000",
+      "handle": "product-handle",
+      "store": "UK",
+      "title": "Example Product",
+      "type": "game",
+      "price": {
+        "amount": 19.99,
+        "currency": "GBP"
+      },
+      "ageSuitability": {
+        "minAge": 6,
+        "maxAge": 12
+      },
+      "inventory": {
+        "stockLevel": 50,
+        "inStock": true
+      }
+    }
+  ],
+  "metaData": {
+    "count": 1,
+    "filters": {
+      "age": 8,
+      "inStock": true,
+      "q": "puzzle"
+    }
+  }
+}
+```
+
+## Running Tests
+
+### Unit Tests
+```bash
+npm test
+```
+
+### Integration Tests
+```bash
+npm run test:integration
+```
+
+### Load Tests
+
+Requires Docker:
+```bash
+npm run test:load
+```
+
+## Production Build
+
+```bash
+npm run build
+npm start
+```
+
+## Architecture
+
+- **Express.js** - Web framework
+- **SQLite** - In-memory database for fast queries
+- **TypeScript** - Type safety
+- **Vitest** - Unit and integration testing
+- **k6** - Load testing
+
+### Data Normalisation
+
+The service handles inconsistent schemas by:
+
+#### Age Data Extraction
+- Collects age data from multiple sources:
+  - `cards[].minAge` and `cards[].maxAge`
+  - `variants[].ageRange.min` and `variants[].ageRange.max`
+  - `recommendedAge` string (e.g., "4-10")
+- **Merge strategy**: Takes the **minimum** of all `minAge` values and the **maximum** of all `maxAge` values
+- **Rationale**: A product is suitable for an age if ANY variant/card/option supports that age. Using min/max ensures we capture the full age range across all purchasable options, making the product discoverable for the widest possible age range
+- Products without any age data are filtered out during ingestion
+
+#### Price Data Extraction
+- Checks multiple locations in priority order:
+  1. `price` (if number) or `price.amount` (if object)
+  2. `pricing.current.amount`
+- Currency extracted from:
+  1. `currency`
+  2. `price.currency`
+  3. `pricing.current.currency`
+- **Merge strategy**: Uses the **first available** value found in the priority order
+- Products without both price and currency are filtered out during ingestion
+
+#### Stock Data Extraction
+- Checks multiple locations in priority order:
+  1. `stockLevel`
+  2. `inventory.stockLevel`
+  3. `availability.stock`
+- **Merge strategy**: Uses the **first available** value found
+- `inStock` is calculated as `stockLevel > 0`
+- Products without stock data are filtered out during ingestion
+
+
+
 ## Overview
 
 You are integrating with a third-party e-commerce platform's product API. The API returns product data in inconsistent formats (different product types use different schemas). Your task is to build a service that:

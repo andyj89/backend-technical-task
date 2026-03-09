@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "DB_PATH=:memory: vitest",
+    "test": "DB_PATH=:memory: vitest src",
     "test:integration": "DB_PATH=:memory: vitest tests/integration --no-file-parallelism",
     "test:load": "./load-tests.sh",
     "build": "rm -rf dist && tsc",
