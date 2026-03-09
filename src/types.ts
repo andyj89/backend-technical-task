@@ -2,6 +2,7 @@ export type ValidatedQuery = {
   age?: number;
   inStock?: boolean;
   q?: string;
+  store?: string;
 };
 
 export type RawProduct = {

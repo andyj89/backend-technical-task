@@ -33,11 +33,20 @@ export const validateInStock = (stock: QueryValue): boolean | undefined => {
   return stock === 'true';
 };
 
+const validateStore = (store: QueryValue): string | undefined => {
+  if (!store) return undefined;
+  if (typeof store !== 'string' || store.length > 100) {
+    throw new ClientError('store is not a valid string', 400);
+  }
+  return store;
+};
+
 export const validateQuery = (query: Record<string, any>): ValidatedQuery => {
   const validatedQuery = {
     age: validateAge(query.age),
     inStock: validateInStock(query.inStock),
     q: validateText(query.q),
+    store: validateStore(query.store),
   };
   return validatedQuery;
 };

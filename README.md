@@ -33,6 +33,9 @@ The server will start on `http://localhost:3000`
 
 ## API Usage Examples
 
+The API validates and only accepts the following query parameters:
+age (number), inStock 'true' | 'false', q (string for text search) with length < 400 , store (string)
+
 ### Get Products by Age
 
 Find all products suitable for 8-year-olds:

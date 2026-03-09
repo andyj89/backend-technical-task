@@ -22,6 +22,14 @@ export default class QueryBuilder {
     return this;
   }
 
+  whereStore(store?: string): this {
+    if (store) {
+      this.conditions.push('store = ?');
+      this.params.push(store);
+    }
+    return this;
+  }
+
   whereInStock(inStock?: boolean): this {
     if (inStock !== undefined) {
       this.conditions.push('inStock = ?');

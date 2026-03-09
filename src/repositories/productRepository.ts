@@ -90,6 +90,7 @@ export class ProductsRepository {
       .from('products')
       .whereAge(filters.age)
       .whereInStock(filters.inStock)
+      .whereStore(filters.store)
       .whereTextSearch(filters.q);
 
     const { sql, params } = builder.build();
