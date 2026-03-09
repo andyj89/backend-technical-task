@@ -1,0 +1,36 @@
+{
+  "name": "backend-technical-task",
+  "version": "1.0.0",
+  "description": "## Overview",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "test:integration": "vitest tests/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andyj89/backend-technical-task.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andyj89/backend-technical-task/issues"
+  },
+  "homepage": "https://github.com/andyj89/backend-technical-task#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "vitest": "^4.0.18"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.5",
+    "eslint": "^10.0.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
+  }
+}
