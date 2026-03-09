@@ -1,30 +1,37 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { createProductsService } from './services/prodctsService';
-import { ProductsRepository } from './repositories/productsRepository';
-import { DatabaseSync } from 'node:sqlite';
-import { createProductsClient } from './clients/productsClient';
+import { validateQuery } from './validators';
+import ClientError from './errors/ClientError';
+import type { ProductsService } from './services/prodctsService';
 
-const router = Router();
-const productsDb = new DatabaseSync(':memory:');
-const productsRepository = new ProductsRepository(productsDb);
-const productsClient = createProductsClient();
-const productsService = createProductsService(
-  productsRepository,
-  productsClient,
-);
+export const createProductsRouter = (productsService: ProductsService) => {
+  const router = Router();
 
-router.post('/products/ingest', async (req: Request, res: Response) => {
-  try {
-    const path = req.body.path;
-    await productsService.ingestProducts(path);
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
-  }
-});
+  router.post('/products/ingest', async (req: Request, res: Response) => {
+    try {
+      const path = req.body.path;
+      const result = await productsService.ingestProducts(path);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
+    }
+  });
 
-router.get('/products', (req: Request, res: Response) => {
-  res.status(200).json({ message: 'ok' });
-});
+  router.get('/products', async (req: Request, res: Response) => {
+    try {
+      const validatedQuery = validateQuery(req.query);
+      const products = await productsService.findProducts(validatedQuery);
+      const metaData = {
+        count: products.length,
+        filters: validatedQuery,
+      };
+      res.json({ products, metaData });
+    } catch (error) {
+      res
+        .status((error as ClientError).status ?? 500)
+        .json({ error: (error as Error).message });
+    }
+  });
 
-export { router as productsApi };
+  return router;
+};

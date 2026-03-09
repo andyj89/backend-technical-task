@@ -1,6 +1,11 @@
 import { ProductsRepository } from '../repositories/productsRepository.js';
 import { ProductsClient } from '../clients/productsClient.js';
-import { NormalisedProduct, RawProduct, StoreProduct } from '../types.js';
+import {
+  NormalisedProduct,
+  RawProduct,
+  StoreProduct,
+  ValidatedQuery,
+} from '../types.js';
 import {
   extractAgeData,
   extractPrice,
@@ -12,6 +17,7 @@ export type ProductsService = {
     pathOrUrl: string,
   ) => Promise<{ inserted: number; failed: string[] }>;
   findByAge: (age: number) => Promise<StoreProduct[]>;
+  findProducts: (filters: ValidatedQuery) => Promise<StoreProduct[]>;
 };
 
 export const createProductsService = (
@@ -43,7 +49,13 @@ export const createProductsService = (
     const priceData = extractPrice(rawProduct);
     const stockData = extractStock(rawProduct);
 
-    if (!priceData || !stockData) {
+    if (!ageData || !priceData || !stockData) {
+      console.log(`Skipping product`, {
+        uuid: rawProduct.uuid,
+        hasAge: !!ageData,
+        hasPrice: !!priceData,
+        hasStock: !!stockData,
+      });
       return null;
     }
 
@@ -58,8 +70,8 @@ export const createProductsService = (
       maxAge: ageData.maxAge,
       price: priceData.price,
       currency: priceData.currency,
-      inStock: stockData?.inStock ?? false,
-      stockLevel: stockData?.stockLevel ?? 0,
+      inStock: stockData.inStock,
+      stockLevel: stockData.stockLevel,
     };
   };
 
@@ -67,8 +79,15 @@ export const createProductsService = (
     return repository.findByAge(age);
   };
 
+  const findProducts = async (
+    filters: ValidatedQuery,
+  ): Promise<StoreProduct[]> => {
+    return repository.findProducts(filters);
+  };
+
   return {
     ingestProducts,
     findByAge,
+    findProducts,
   };
 };

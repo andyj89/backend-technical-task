@@ -162,5 +162,115 @@ describe('ProductsRepository', () => {
         },
       });
     });
+
+    it('includes products where age equals minAge (inclusive lower bound)', () => {
+      const db = new DatabaseSync(':memory:');
+      const repository = new ProductsRepository(db);
+
+      const products: NormalisedProduct[] = [
+        {
+          uuid: '1',
+          handle: 'product-1',
+          store: 'uk',
+          title: 'Product 1',
+          type: 'single',
+          minAge: 5,
+          maxAge: 10,
+          price: 10.99,
+          currency: 'GBP',
+          inStock: true,
+          stockLevel: 5,
+        },
+      ];
+
+      repository.insertProducts(products);
+
+      const results = repository.findByAge(5);
+
+      expect(results).toHaveLength(1);
+      expect(results[0].uuid).toBe('1');
+    });
+
+    it('includes products where age equals maxAge (inclusive upper bound)', () => {
+      const db = new DatabaseSync(':memory:');
+      const repository = new ProductsRepository(db);
+
+      const products: NormalisedProduct[] = [
+        {
+          uuid: '1',
+          handle: 'product-1',
+          store: 'uk',
+          title: 'Product 1',
+          type: 'single',
+          minAge: 5,
+          maxAge: 10,
+          price: 10.99,
+          currency: 'GBP',
+          inStock: true,
+          stockLevel: 5,
+        },
+      ];
+
+      repository.insertProducts(products);
+
+      const results = repository.findByAge(10);
+
+      expect(results).toHaveLength(1);
+      expect(results[0].uuid).toBe('1');
+    });
+
+    it('excludes products where age is below minAge', () => {
+      const db = new DatabaseSync(':memory:');
+      const repository = new ProductsRepository(db);
+
+      const products: NormalisedProduct[] = [
+        {
+          uuid: '1',
+          handle: 'product-1',
+          store: 'uk',
+          title: 'Product 1',
+          type: 'single',
+          minAge: 5,
+          maxAge: 10,
+          price: 10.99,
+          currency: 'GBP',
+          inStock: true,
+          stockLevel: 5,
+        },
+      ];
+
+      repository.insertProducts(products);
+
+      const results = repository.findByAge(4);
+
+      expect(results).toHaveLength(0);
+    });
+
+    it('excludes products where age is above maxAge', () => {
+      const db = new DatabaseSync(':memory:');
+      const repository = new ProductsRepository(db);
+
+      const products: NormalisedProduct[] = [
+        {
+          uuid: '1',
+          handle: 'product-1',
+          store: 'uk',
+          title: 'Product 1',
+          type: 'single',
+          minAge: 5,
+          maxAge: 10,
+          price: 10.99,
+          currency: 'GBP',
+          inStock: true,
+          stockLevel: 5,
+        },
+      ];
+
+      repository.insertProducts(products);
+
+      const results = repository.findByAge(11);
+
+      expect(results).toHaveLength(0);
+    });
   });
 });

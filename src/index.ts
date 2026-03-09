@@ -1,21 +1,25 @@
-import express from 'express';
-import cors from 'cors';
-import { productsApi } from './productsApi';
-
-const app = express();
+import { app, productsService } from './server';
+import { resolve } from 'node:path';
 
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const startServer = async () => {
+  const productsPath = resolve(
+    process.cwd(),
+    'products_1000_mixed_schema.json',
+  );
+  console.log('Ingesting products...');
+  const result = await productsService.ingestProducts(productsPath);
+  console.log(
+    `Ingested ${result.inserted} products, ${result.failed.length} failed`,
+  );
+  if (result.failed.length > 0) {
+    console.log('All failed product UUIDs:', result.failed);
+  }
 
-app.use(express.json());
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+};
 
-app.get('/health', (req, res) => {
-  res.json({ message: 'ok' });
-});
-
-app.use('/api', productsApi);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+startServer();

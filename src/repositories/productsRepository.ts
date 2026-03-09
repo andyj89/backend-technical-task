@@ -1,5 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
-import { NormalisedProduct, StoreProduct } from '../types';
+import { NormalisedProduct, StoreProduct, ValidatedQuery } from '../types';
+import QueryBuilder from '../services/QueryBuilder';
 
 export class ProductsRepository {
   constructor(private db: DatabaseSync) {
@@ -14,6 +15,7 @@ export class ProductsRepository {
         handle TEXT,
         store TEXT,
         title TEXT,
+        description TEXT,
         type TEXT,
         minAge INTEGER,
         maxAge INTEGER,
@@ -36,8 +38,8 @@ export class ProductsRepository {
   insertProducts(products: NormalisedProduct[]): number {
     const insert = this.db.prepare(`
       INSERT OR REPLACE INTO products (
-        uuid, handle, store, title, type, minAge, maxAge, price, currency, inStock, stockLevel
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        uuid, handle, store, title, description, type, minAge, maxAge, price, currency, inStock, stockLevel
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     this.db.exec('BEGIN TRANSACTION');
@@ -49,6 +51,7 @@ export class ProductsRepository {
           product.handle,
           product.store,
           product.title,
+          product.description ?? null,
           product.type,
           product.minAge,
           product.maxAge,
@@ -63,6 +66,7 @@ export class ProductsRepository {
       return rowsAffected;
     } catch (error) {
       this.db.exec('ROLLBACK');
+      console.error('Insert error:', error);
       throw error;
     }
   }
@@ -74,6 +78,23 @@ export class ProductsRepository {
     `);
 
     const rows = query.all(age, age) as any[];
+
+    return rows.map(this.transformRow);
+  }
+
+  findProducts(filters: ValidatedQuery): StoreProduct[] {
+    const builder = new QueryBuilder();
+
+    builder
+      .select('*')
+      .from('products')
+      .whereAge(filters.age)
+      .whereInStock(filters.inStock)
+      .whereTextSearch(filters.q);
+
+    const { sql, params } = builder.build();
+    const query = this.db.prepare(sql);
+    const rows = query.all(...params) as any[];
 
     return rows.map(this.transformRow);
   }

@@ -110,8 +110,8 @@ describe('productsNormaliser', () => {
       } as unknown as RawProduct;
 
       const ageData = extractAgeData(rawProduct);
-
-      expect(ageData.minAge).toBe(3);
+      expect(ageData).not.toBeNull();
+      expect(ageData!.minAge).toBe(3);
     });
 
     it('takes maximum of all maxAge values across sources', () => {
@@ -122,8 +122,8 @@ describe('productsNormaliser', () => {
       } as unknown as RawProduct;
 
       const ageData = extractAgeData(rawProduct);
-
-      expect(ageData.maxAge).toBe(15);
+      expect(ageData).not.toBeNull();
+      expect(ageData!.maxAge).toBe(15);
     });
   });
 
@@ -137,6 +137,16 @@ describe('productsNormaliser', () => {
       const price = extractPrice(rawProduct);
 
       expect(price).toEqual({ price: 100, currency: 'GBP' });
+    });
+
+    it('extracts price from price object with amount and currency', () => {
+      const rawProduct = {
+        price: { amount: 16.82, currency: 'GBP' },
+      } as unknown as RawProduct;
+
+      const price = extractPrice(rawProduct);
+
+      expect(price).toEqual({ price: 16.82, currency: 'GBP' });
     });
 
     it('extracts price from pricing', () => {

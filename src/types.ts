@@ -1,9 +1,16 @@
+export type ValidatedQuery = {
+  age?: number;
+  inStock?: boolean;
+  q?: string;
+};
+
 export type RawProduct = {
   store: string;
   uuid: string;
   handle: string;
   title: string;
   type: string;
+  age?: { min: number; max: number };
   price?: number;
   originalPrice?: number;
   currency?: string;
