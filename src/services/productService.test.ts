@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createProductsService } from './prodctsService.js';
-import { ProductsRepository } from '../repositories/productsRepository.js';
+import { createProductsService } from './productService.js';
+import { ProductsRepository } from '../repositories/productRepository.js';
 import { DatabaseSync } from 'node:sqlite';
 
 describe('createProductsService', () => {

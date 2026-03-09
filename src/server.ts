@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import { DatabaseSync } from 'node:sqlite';
-import { ProductsRepository } from './repositories/productsRepository.js';
+import { ProductsRepository } from './repositories/productRepository.js';
 import { createProductsClient } from './clients/productsClient.js';
-import { createProductsService } from './services/prodctsService.js';
+import { createProductsService } from './services/productService.js';
 import { createProductsRouter } from './productsApi.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler } from './middleware/errorHandler.js';

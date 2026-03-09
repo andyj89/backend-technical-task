@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ProductsRepository } from './productsRepository.js';
+import { ProductsRepository } from './productRepository.js';
 import { DatabaseSync } from 'node:sqlite';
 import { NormalisedProduct } from '../types.js';
 

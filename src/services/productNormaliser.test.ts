@@ -3,7 +3,7 @@ import {
   extractAgeData,
   extractPrice,
   extractStock,
-} from './productsNormaliser';
+} from './productNormaliser';
 import { RawProduct } from '../types';
 
 describe('productsNormaliser', () => {

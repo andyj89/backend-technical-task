@@ -1,4 +1,4 @@
-import { ProductsRepository } from '../repositories/productsRepository.js';
+import { ProductsRepository } from '../repositories/productRepository.js';
 import { ProductsClient } from '../clients/productsClient.js';
 import {
   NormalisedProduct,
@@ -10,7 +10,7 @@ import {
   extractAgeData,
   extractPrice,
   extractStock,
-} from './productsNormaliser.js';
+} from './productNormaliser.js';
 
 export type ProductsService = {
   ingestProducts: (
@@ -39,6 +39,11 @@ export const createProductsService = (
     }
 
     const inserted = repository.insertProducts(valid);
+
+    if (failed.length > 0) {
+      console.warn(`Failed to import ${failed.length} products:`, failed);
+    }
+
     return { inserted, failed };
   };
 
