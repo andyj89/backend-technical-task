@@ -7,7 +7,7 @@
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22.15+
 - npm
 
 ### Installation
