@@ -6,11 +6,21 @@ export type ValidatedQuery = {
   age?: number;
   inStock?: boolean;
   q?: string;
+  store?: string;
+};
+
+const getFirstValue = (value: QueryValue): string | undefined => {
+  if (Array.isArray(value)) {
+    return value[0];
+  }
+  return value;
 };
 
 export const validateAge = (age: QueryValue): number | undefined => {
-  if (!age) return undefined;
-  const numAge = Number(age);
+  const ageStr = getFirstValue(age);
+  if (!ageStr) return undefined;
+  
+  const numAge = Number(ageStr);
   if (Number.isNaN(numAge)) {
     throw new ClientError('age is not a valid number', 400);
   }
@@ -18,35 +28,40 @@ export const validateAge = (age: QueryValue): number | undefined => {
 };
 
 export const validateText = (text: QueryValue): string | undefined => {
-  if (!text) return undefined;
-  if (typeof text === 'string' && text.length > 1000) {
+  const textStr = getFirstValue(text);
+  if (!textStr) return undefined;
+  
+  if (textStr.length > 1000) {
     throw new ClientError('query parameter too long', 400);
   }
-  return text as string;
+  return textStr;
 };
 
 export const validateInStock = (stock: QueryValue): boolean | undefined => {
-  if (!stock) return undefined;
-  if (stock !== 'true' && stock !== 'false') {
+  const stockStr = getFirstValue(stock);
+  if (!stockStr) return undefined;
+  
+  if (stockStr !== 'true' && stockStr !== 'false') {
     throw new ClientError('stock is not a valid boolean', 400);
   }
-  return stock === 'true';
+  return stockStr === 'true';
 };
 
 const validateStore = (store: QueryValue): string | undefined => {
-  if (!store) return undefined;
-  if (typeof store !== 'string' || store.length > 100) {
-    throw new ClientError('store is not a valid string', 400);
+  const storeStr = getFirstValue(store);
+  if (!storeStr) return undefined;
+  
+  if (storeStr.length > 10) {
+    throw new ClientError('store parameter too long', 400);
   }
-  return store;
+  return storeStr;
 };
 
 export const validateQuery = (query: Record<string, any>): ValidatedQuery => {
-  const validatedQuery = {
+  return {
     age: validateAge(query.age),
     inStock: validateInStock(query.inStock),
     q: validateText(query.q),
     store: validateStore(query.store),
   };
-  return validatedQuery;
 };
