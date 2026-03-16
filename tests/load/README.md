@@ -33,5 +33,5 @@ Or with a custom URL:
 
 ## Thresholds
 
-- p99 response time: < 500ms
+- p99 response time: < 50ms
 - Error rate: < 10%

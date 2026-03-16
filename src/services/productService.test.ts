@@ -75,8 +75,4 @@ describe('createProductsService', () => {
       expect(response.failed).toEqual(['2']);
     });
   });
-
-  describe('getProducts', () => {
-    it('returns products by age', async () => {});
-  });
 });
